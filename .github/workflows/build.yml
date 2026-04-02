@@ -1,0 +1,26 @@
+name: Build OpenSSL
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build OpenSSL
+        run: ./build-libssl.sh --version=3.5.4
+
+      - name: Create XCFramework
+        run: ./create-openssl-framework.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: openssl-apple-static
+          path: |
+            lib/
+            frameworks/
+          retention-days: 7
